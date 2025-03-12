@@ -1,0 +1,99 @@
+Update System and Upgrade Existing Packages: Ensure your system is up to date:
+
+sudo apt-get update
+
+sudo apt-get upgrade
+
+sudo pip3 install virtualenv
+
+python3 -m venv tftest
+
+source tftest/bin/activate
+
+sudo apt-get install python3-pip
+
+installation process will be usually killed or node will crash if done without increasing swap space, possibly due to running out of memory or other system resources. This is a common issue on resource-constrained devices like the Raspberry Pi, particularly when working with large packages like TensorFlow.
+
+Edit the /etc/dphys-swapfile file and change the CONF_SWAPSIZE value to something larger (e.g., 2048 for 2GB). Then, restart the swapfile service:
+
+sudo nano /etc/dphys-swapfile
+
+CONF_SWAPSIZE=2048
+
+Restart the Swap Service
+
+sudo dphys-swapfile swapoff
+
+sudo dphys-swapfile setup
+
+sudo dphys-swapfile swapon
+
+Verify the Changes
+
+free -m
+
+#Install tf with just one command
+
+pip3 install tensorflow
+
+#check pkg list
+
+pip3 list
+
+try 3 examples using tf:
+
+python3 tfvers.py
+
+#=========#
+
+import tensorflow as tf
+
+print(tf.__version__)
+
+python3 tfexa1.py
+
+#=========#
+
+import tensorflow as tf
+
+# Create a constant tensor
+
+hello_tensor = tf.constant('Hello, TensorFlow!')
+
+# Use tf.compat.v1.Session to evaluate the tensor
+
+with tf.compat.v1.Session() as sess:
+
+    print(sess.run(hello_tensor).decode())
+
+python3 tftest.py
+
+#=========#
+
+import tensorflow as tf
+
+import numpy as np
+
+# Define input and output arrays
+
+X = np.array([-1.0, 0.0, 1.0, 2.0, 3.0, 4.0], dtype=float)
+
+y = np.array([-3.0, -1.0, 1.0, 3.0, 5.0, 7.0], dtype=float)
+
+# Create a simple Sequential model with one Dense layer
+
+model = tf.keras.Sequential([tf.keras.layers.Dense(units=1, input_shape=[1])])
+
+# Compile the model with a loss function and optimizer
+
+model.compile(optimizer='sgd', loss='mean_squared_error')
+
+# Fit the model to the data (train the model)
+
+model.fit(X, y, epochs=500)
+
+# Make a prediction
+
+print(model.predict([10.0])) # Output should be close to [19.0]
+
+This should be a good way to get tf on constrained nodes like the rpis.
